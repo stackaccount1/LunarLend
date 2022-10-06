@@ -1,4 +1,4 @@
-# Lunar Lend - Mock Borrowing and Lending Protocol
+# Lunar Lend - Borrowing and Lending Protocol (Mock)
 
 Berserk Themed Liquidity Protocol
 
