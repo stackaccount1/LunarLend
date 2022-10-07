@@ -97,4 +97,8 @@ contract LunarLend {
 
         return true;
     }
+
+    function myBalance() public view returns (uint256) {
+        return balanceOf[msg.sender];
+    }
 }
