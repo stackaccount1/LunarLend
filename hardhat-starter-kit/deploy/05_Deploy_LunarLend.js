@@ -7,7 +7,7 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
     const { deployer } = await getNamedAccounts()
     const chainId = network.config.chainId
     //args = []
-    const anonStars = await deploy("AnonStars", {
+    const lunarLend = await deploy("LunarLend", {
         from: deployer,
         args: [],
         log: true,
@@ -15,10 +15,10 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
     })
     if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
         log("Verifying...")
-        await verify(anonStars.address, args)
+        await verify(lunarLend.address, args)
     }
     const networkName = network.name == "hardhat" ? "localhost" : network.name
-    log(`AnonStars contract - ${anonStars.address} --network ${networkName}`)
+    log(`Lunar Lend contract - ${lunarLend.address} --network ${networkName}`)
     log("----------------------------------------------------")
 }
 
