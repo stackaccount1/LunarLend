@@ -4,8 +4,8 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
 
 !developmentChains.includes(network.name)
     ? describe.skip
-    : describe("AnonStars", function () {
-          let anonStars
+    : describe("LunarLend", function () {
+          let lunarLend
           //let mockV3Aggregator
           let deployer
           const sendValue = ethers.utils.parseEther("1")
@@ -15,7 +15,7 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
               // deployer = accounts[0]
               deployer = (await getNamedAccounts()).deployer
               await deployments.fixture(["all"])
-              anonStars = await ethers.getContract("AnonStars", deployer)
+              lunarLend = await ethers.getContract("LunarLend", deployer)
               //mockV3Aggregator = await ethers.getContract("MockV3Aggregator", deployer)
           })
           /*
@@ -26,7 +26,7 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
               })
           })*/
 
-          describe("createProfile", function () {
+          describe("Check if WETH functionality is correct:", function () {
               // https://ethereum-waffle.readthedocs.io/en/latest/matchers.html
               // could also do assert.fail
               /*it("Increments", async () => {
@@ -35,17 +35,13 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
               // we could be even more precise here by making sure exactly $50 works
               // but this is good enough for now
 
-              it("Checks to see if the id is 1 after 1 profile submission", async () => {
-                  await anonStars.createProfile(
-                      "puffer",
-                      "www.google.com/images/puffer_profile_pic",
-                      "coder of the blockchain clan",
-                      "www.github.com/stackaccount1"
-                  )
-                  const response = await anonStars.returnId()
-                  const value = 1
-                  assert.equal(response.toString(), value.toString())
+              it("Checks to see if balance matches deposited ether", async () => {
+                  await lunarLend.deposit({ value: sendValue })
+                  const response = await lunarLend.myBalance()
+                  const number = 1
+                  assert.equal(response.toString(), sendValue.toString())
               })
+              /*
               it("Assert two profiles created match", async () => {
                   const [account, accounts1, accounts2] = await ethers.getSigners()
                   //anonStars = anonStars.connect(accounts[0])
@@ -71,7 +67,9 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                   let three = 3
                   assert.equal(id.toString(), three.toString())
               })
+              */
           })
+          /*
           describe("endorsementLogic", function () {
               it("Checks to see if the endorser is listed", async () => {
                   const [account, accounts1, accounts2, accounts3, accounts4] =
