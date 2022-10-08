@@ -3,6 +3,9 @@ pragma solidity ^0.8.6;
 
 // 3. Interfaces, Libraries, Contracts, Errors
 //error error_notenougheth();
+import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
+
+//Errors
 error Not_Owner();
 error Insufficient_Balance();
 
