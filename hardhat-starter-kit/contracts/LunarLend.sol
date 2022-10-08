@@ -4,6 +4,7 @@ pragma solidity ^0.8.6;
 // 3. Interfaces, Libraries, Contracts, Errors
 //error error_notenougheth();
 error Not_Owner();
+error Insufficient_Balance();
 
 /**@title Lunar Lend Main Contract
  * @author Stackaccount1
@@ -58,7 +59,7 @@ contract LunarLend {
     }
 
     function withdraw(uint256 wad) public {
-        require(balanceOf[msg.sender] >= wad);
+        require(balanceOf[msg.sender] >= wad, "Insufficient Balance");
         balanceOf[msg.sender] -= wad;
         payable(msg.sender).transfer(wad);
         emit Withdrawal(msg.sender, wad);
@@ -83,7 +84,7 @@ contract LunarLend {
         address dst,
         uint256 wad
     ) public returns (bool) {
-        require(balanceOf[src] >= wad);
+        require(balanceOf[src] >= wad, "Insufficient Balance");
 
         if (src != msg.sender && allowance[src][msg.sender] != type(uint256).max) {
             require(allowance[src][msg.sender] >= wad);

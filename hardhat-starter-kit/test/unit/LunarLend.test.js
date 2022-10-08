@@ -9,6 +9,7 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
           //let mockV3Aggregator
           let deployer
           const sendValue = ethers.utils.parseEther("1")
+          const doubleSendValue = ethers.utils.parseEther("2")
           const { log } = deployments
           beforeEach(async () => {
               // const accounts = await ethers.getSigners()
@@ -27,32 +28,28 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
           })*/
 
           describe("Check if WETH functionality is correct:", function () {
-              // https://ethereum-waffle.readthedocs.io/en/latest/matchers.html
-              // could also do assert.fail
-              /*it("Increments", async () => {
-                  await expect(fundMe.fund()).to.be.revertedWith("You need to spend more ETH!")
-              })*/
-              // we could be even more precise here by making sure exactly $50 works
-              // but this is good enough for now
-
               it("Checks to see if balance matches deposited ether", async () => {
                   await lunarLend.deposit({ value: sendValue })
                   const response = await lunarLend.myBalance()
-                  const number = 1
                   assert.equal(response.toString(), sendValue.toString())
               })
-              /*
-              it("Assert two profiles created match", async () => {
-                  const [account, accounts1, accounts2] = await ethers.getSigners()
-                  //anonStars = anonStars.connect(accounts[0])
-                  const create = await anonStars.createProfile("1", "1", "1", "1")
-                  let one = await anonStars.viewProfileStrings(deployer)
-                  const createdos = await anonStars
-                      .connect(accounts1)
-                      .createProfile("1", "1", "1", "1")
-                  let two = await anonStars.viewProfileStrings(accounts1.address)
-                  assert.equal(one.toString(), two.toString())
+              it("Trys to send WETH that one does not have", async () => {
+                  const [account, accounts1] = await ethers.getSigners()
+                  await lunarLend.approve(account.address, sendValue)
+                  //await lunarLend.transfer(accounts1, sendValue)
+                  await expect(lunarLend.transfer(accounts1.address, sendValue)).to.be.revertedWith(
+                      "Insufficient Balance"
+                  )
               })
+              it("Trys to withdraw more ETH than deposited", async () => {
+                  await lunarLend.deposit({ value: sendValue })
+                  const response = await lunarLend.myBalance()
+                  assert.equal(response.toString(), sendValue.toString())
+                  await expect(lunarLend.withdraw(doubleSendValue)).to.be.revertedWith(
+                      "Insufficient Balance"
+                  )
+              })
+              /*
               it("Creates three profiles, makes sure id is at No. 3", async () => {
                   const [account, accounts1, accounts2] = await ethers.getSigners()
                   //anonStars = anonStars.connect(accounts[0])
