@@ -22,4 +22,4 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
     log("----------------------------------------------------")
 }
 
-module.exports.tags = ["all", "anon"]
+module.exports.tags = ["all", "lunar"]
