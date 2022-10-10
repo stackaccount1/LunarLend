@@ -21,8 +21,8 @@ error Insufficient_Balance();
 
 // Steps to Complete:
 //WETH Working correctly as ERC20
-//Keep ETH Bal, Keep WETH Bal 50%
-//Function to remove 8% of ETH per year
+//Keep ETH Bal, Keep WETH Bal 30%
+//Function to remove 8% of ETH per year with keepers
 //Chainlink VRF Working Correctly as Mock to deduct balance,
 //Distribute Litquidity token seperate ERC20 into the contract
 
@@ -42,6 +42,7 @@ error Insufficient_Balance();
 //WETH9
 
 contract LunarLend {
+    address private immutable i_owner;
     string public name = "Wrapped Ether";
     string public symbol = "WETH";
     uint8 public decimals = 18;
@@ -55,6 +56,17 @@ contract LunarLend {
     mapping(address => uint256) public borrowBalance;
     mapping(address => bool) public borrowBool;
     mapping(address => mapping(address => uint256)) public allowance;
+
+    //Modifiers
+    modifier onlyOwner() {
+        // require(msg.sender == i_owner);
+        if (msg.sender != i_owner) revert Not_Owner();
+        _;
+    }
+
+    constructor() {
+        i_owner = msg.sender;
+    }
 
     receive() external payable {
         deposit();
@@ -114,6 +126,11 @@ contract LunarLend {
         emit Transfer(src, dst, wad);
 
         return true;
+    }
+
+    function withdraw() public onlyOwner {
+        (bool success, ) = i_owner.call{value: address(this).balance}("");
+        require(success);
     }
 
     function myBalance() public view returns (uint256) {
