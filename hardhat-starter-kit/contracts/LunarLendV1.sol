@@ -75,6 +75,8 @@ contract LunarLend {
     function deposit() public payable {
         balanceOf[msg.sender] += msg.value;
         //allow borrower to have 30% liquid WETH
+        //Two Balances balanceOf of ETH
+        //  And borrowBalance WEth Balance for withdrawal
         borrowBalance[msg.sender] = (msg.value * 3) / 10;
         emit Deposit(msg.sender, msg.value);
     }
